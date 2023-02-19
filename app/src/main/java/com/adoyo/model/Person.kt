@@ -9,7 +9,7 @@ import io.realm.kotlin.types.annotations.Index
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
-class Person: RealmObject {
+class Person : RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId.invoke()
     var name: String = ""
@@ -19,9 +19,10 @@ class Person: RealmObject {
     var adult: Boolean = age >= 18
     var address: Address? = null
     var pets: RealmList<Pet> = realmListOf()
-    var timeStamp: RealmInstant = RealmInstant.now()
+    var timestamp: RealmInstant = RealmInstant.now()
 }
-class Address: RealmObject {
+
+class Address : RealmObject {
     var streetName: String = ""
     var streetNumber: Int = 0
 }

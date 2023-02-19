@@ -129,7 +129,7 @@ fun HomeContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     LazyColumn(modifier = Modifier.weight(1f)) {
                         items(items = data, key = { it._id.toHexString() }) {
-                            PersonView(id = it._id, name = it.name, timeStamp = it.timeStamp)
+                            PersonView(id = it._id.toHexString(), name = it.name, timeStamp = it.timestamp)
 
                         }
 
