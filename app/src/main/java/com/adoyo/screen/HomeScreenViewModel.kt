@@ -8,6 +8,7 @@ import com.adoyo.model.Person
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,17 @@ class HomeScreenViewModel @Inject constructor(private val repository: MongoRepos
         viewModelScope.launch(Dispatchers.IO) {
             if (name.value.isNotEmpty()) {
                 repository.insertPerson(person = Person().apply {
+                    name = this@HomeScreenViewModel.name.value
+                })
+            }
+        }
+    }
+
+    fun updatePerson() {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (objectId.value.isNotEmpty()) {
+                repository.updatePerson(person = Person().apply {
+                    _id = ObjectId(hexString = this@HomeScreenViewModel.objectId.value)
                     name = this@HomeScreenViewModel.name.value
                 })
             }

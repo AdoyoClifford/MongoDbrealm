@@ -24,7 +24,7 @@ class MongoRepositoryImpl(val realm: Realm):MongoRepository {
 
     override suspend fun updatePerson(person: Person) {
         realm.write {
-            val queriedPerson = query<Person>(query = "_id == $0", person.id).first().find()
+            val queriedPerson = query<Person>(query = "_id == $0", person._id).first().find()
             queriedPerson?.name = person.name
         }
     }

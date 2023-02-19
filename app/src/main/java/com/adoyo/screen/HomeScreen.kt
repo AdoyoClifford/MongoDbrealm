@@ -46,16 +46,29 @@ fun HomeScreen(
     name: String,
     objectId: String,
     onNameChanged: (String) -> Unit,
-    onObjectIdChanged: (String) -> String,
+    onObjectIdChanged: (String) -> Unit,
     onInsertClicked: () -> Unit,
     onUpdateClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onFilteredClicked: () -> Unit
 ) {
     Scaffold(
-        content = {}
-    )
+        content = {
+            HomeContent(
+                data = data,
+                filtered = filtered,
+                name = name,
+                objectId = objectId,
+                onNameChanged = onNameChanged,
+                onObjectIdChanged = onObjectIdChanged,
+                onInsertClicked = onInsertClicked,
+                onUpdateClicked = onUpdateClicked,
+                onDeleteClicked = onDeleteClicked,
+                onFilteredClicked = onFilteredClicked
+            )
+        })
 }
+
 
 @Composable
 fun HomeContent(
@@ -116,6 +129,7 @@ fun HomeContent(
                     Spacer(modifier = Modifier.height(24.dp))
                     LazyColumn(modifier = Modifier.weight(1f)) {
                         items(items = data, key = { it._id.toHexString() }) {
+                            PersonView(id = it._id, name = it.name, timeStamp = it.timeStamp)
 
                         }
 
@@ -155,9 +169,9 @@ fun PersonView(id: String, name: String, timeStamp: RealmInstant) {
     ) {
         Text(
             text = SimpleDateFormat(
-                        "hh:mm: a",
-                        Locale.getDefault()
-                    ).format(Date.from(timeStamp.toInstant())).uppercase(Locale.ROOT),
+                "hh:mm: a",
+                Locale.getDefault()
+            ).format(Date.from(timeStamp.toInstant())).uppercase(Locale.ROOT),
             style = TextStyle(
                 fontSize = MaterialTheme.typography.bodyMedium.fontSize,
                 fontWeight = FontWeight.Normal
