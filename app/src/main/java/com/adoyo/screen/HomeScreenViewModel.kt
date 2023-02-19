@@ -1,6 +1,5 @@
 package com.adoyo.screen
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,9 +7,7 @@ import com.adoyo.data.MongoRepository
 import com.adoyo.model.Person
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.mongodb.kbson.BsonObjectId
 import javax.inject.Inject
 
 @HiltViewModel
