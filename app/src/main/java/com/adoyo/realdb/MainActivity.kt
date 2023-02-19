@@ -6,17 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.adoyo.realdb.ui.theme.RealDbTheme
 import com.adoyo.screen.HomeScreen
-import com.adoyo.screen.HomeScreenViewModel
+import com.adoyo.screen.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel: HomeScreenViewModel = hiltViewModel()
+                    val viewModel: HomeViewModel = hiltViewModel()
                     val data by viewModel.data
 
                     HomeScreen(
@@ -41,8 +37,7 @@ class MainActivity : ComponentActivity() {
                         onInsertClicked = { viewModel.insertPerson() },
                         onUpdateClicked = { viewModel.updatePerson() },
                         onDeleteClicked = { viewModel.deletePerson() },
-                        onFilteredClicked = { viewModel.filteredData() })
-
+                        onFilterClicked = { viewModel.filterData() })
                 }
             }
         }

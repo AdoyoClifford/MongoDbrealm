@@ -50,7 +50,7 @@ fun HomeScreen(
     onInsertClicked: () -> Unit,
     onUpdateClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
-    onFilteredClicked: () -> Unit
+    onFilterClicked: () -> Unit
 ) {
     Scaffold(
         content = {
@@ -64,12 +64,13 @@ fun HomeScreen(
                 onInsertClicked = onInsertClicked,
                 onUpdateClicked = onUpdateClicked,
                 onDeleteClicked = onDeleteClicked,
-                onFilteredClicked = onFilteredClicked
+                onFilterClicked = onFilterClicked
             )
-        })
+        }
+    )
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     data: List<Person>,
@@ -81,13 +82,14 @@ fun HomeContent(
     onInsertClicked: () -> Unit,
     onUpdateClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
-    onFilteredClicked: () -> Unit
+    onFilterClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+            .padding(all = 24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column {
             Row {
@@ -95,54 +97,55 @@ fun HomeContent(
                     modifier = Modifier.weight(1f),
                     value = objectId,
                     onValueChange = onObjectIdChanged,
-                    placeholder = { Text(text = "Object Id") }
+                    placeholder = { Text(text = "Object ID") }
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 TextField(
                     modifier = Modifier.weight(1f),
                     value = name,
                     onValueChange = onNameChanged,
-                    placeholder = { Text(text = "Object Id") }
+                    placeholder = { Text(text = "Name") }
                 )
-                Spacer(modifier = Modifier.height(24.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(state = rememberScrollState()),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(onClick = onInsertClicked) {
-                        Text(text = "Add")
-                    }
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Button(onClick = onUpdateClicked) {
-                        Text(text = "Update")
-                    }
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Button(onClick = onDeleteClicked) {
-                        Text(text = "Delete")
-                    }
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Button(onClick = onFilteredClicked) {
-                        Text(text = if (filtered) "Clear" else "Filter")
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    LazyColumn(modifier = Modifier.weight(1f)) {
-                        items(items = data, key = { it._id.toHexString() }) {
-                            PersonView(id = it._id.toHexString(), name = it.name, timeStamp = it.timestamp)
-
-                        }
-
-                    }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(state = rememberScrollState()),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(onClick = onInsertClicked) {
+                    Text(text = "Add")
+                }
+                Spacer(modifier = Modifier.width(6.dp))
+                Button(onClick = onUpdateClicked) {
+                    Text(text = "Update")
+                }
+                Spacer(modifier = Modifier.width(6.dp))
+                Button(onClick = onDeleteClicked) {
+                    Text(text = "Delete")
+                }
+                Spacer(modifier = Modifier.width(6.dp))
+                Button(onClick = onFilterClicked) {
+                    Text(text = if (filtered) "Clear" else "Filter")
                 }
             }
         }
-
+        Spacer(modifier = Modifier.height(24.dp))
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(items = data, key = { it._id.toHexString() }) {
+                PersonView(
+                    id = it._id.toHexString(),
+                    name = it.name,
+                    timestamp = it.timestamp
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun PersonView(id: String, name: String, timeStamp: RealmInstant) {
+fun PersonView(id: String, name: String, timestamp: RealmInstant) {
     Row(modifier = Modifier.padding(bottom = 24.dp)) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -162,22 +165,19 @@ fun PersonView(id: String, name: String, timeStamp: RealmInstant) {
                 )
             }
         }
-    }
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = SimpleDateFormat(
-                "hh:mm: a",
-                Locale.getDefault()
-            ).format(Date.from(timeStamp.toInstant())).uppercase(Locale.ROOT),
-            style = TextStyle(
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                fontWeight = FontWeight.Normal
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End
+        ) {
+            Text(
+                text = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                    .format(Date.from(timestamp.toInstant())).uppercase(),
+                style = TextStyle(
+                    fontSize = MaterialTheme.typography.bodyMedium.fontSize,
+                    fontWeight = FontWeight.Normal
+                )
             )
-        )
-
+        }
     }
 }
 

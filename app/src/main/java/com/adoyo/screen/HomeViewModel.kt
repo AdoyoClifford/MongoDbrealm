@@ -12,13 +12,21 @@ import org.mongodb.kbson.ObjectId
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val repository: MongoRepository) :
-    ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val repository: MongoRepository
+) : ViewModel() {
     var name = mutableStateOf("")
     var objectId = mutableStateOf("")
     var filtered = mutableStateOf(false)
     var data = mutableStateOf(emptyList<Person>())
 
+    init {
+        viewModelScope.launch {
+            repository.getData().collect {
+                data.value = it
+            }
+        }
+    }
 
     fun updateName(name: String) {
         this.name.value = name
@@ -32,7 +40,7 @@ class HomeScreenViewModel @Inject constructor(private val repository: MongoRepos
         viewModelScope.launch(Dispatchers.IO) {
             if (name.value.isNotEmpty()) {
                 repository.insertPerson(person = Person().apply {
-                    name = this@HomeScreenViewModel.name.value
+                    name = this@HomeViewModel.name.value
                 })
             }
         }
@@ -42,34 +50,34 @@ class HomeScreenViewModel @Inject constructor(private val repository: MongoRepos
         viewModelScope.launch(Dispatchers.IO) {
             if (objectId.value.isNotEmpty()) {
                 repository.updatePerson(person = Person().apply {
-                    _id = ObjectId(hexString = this@HomeScreenViewModel.objectId.value)
-                    name = this@HomeScreenViewModel.name.value
+                    _id = ObjectId(hexString = this@HomeViewModel.objectId.value)
+                    name = this@HomeViewModel.name.value
                 })
             }
         }
     }
 
     fun deletePerson() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             if (objectId.value.isNotEmpty()) {
-                repository.deletePerson(id = org.mongodb.kbson.ObjectId(hexString = objectId.value))
+                repository.deletePerson(id = ObjectId(hexString = objectId.value))
             }
         }
     }
 
-    fun filteredData() {
+    fun filterData() {
         viewModelScope.launch(Dispatchers.IO) {
             if (filtered.value) {
-                repository.getData().collect{
+                repository.getData().collect {
                     filtered.value = false
                     name.value = ""
                     data.value = it
                 }
-             } else {
-                 repository.filterData(name = name.value).collect{
-                     filtered.value = true
-                     data.value = it
-                 }
+            } else {
+                repository.filterData(name = name.value).collect {
+                    filtered.value = true
+                    data.value = it
+                }
             }
         }
     }
